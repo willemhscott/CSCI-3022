@@ -1,0 +1,534 @@
+%\documentclass[addpoints, answers]{exam}
+\documentclass[addpoints]{exam}
+
+% show the solutions? 0=no, 1=yes
+% if yes, then remove "answers" from the documentclass definition above.
+\def\solutions{0}
+
+% define which version of the exam (1-?)
+\def\examversion{1}
+% then use \if\examversion1 (or 2 or 3...)  ... \fi  to show only one version for each problem
+
+\newif\ifanswer\answerfalse
+
+\runningfooter{}
+{}
+{{\bf  \makebox[1in]{\hrulefill}
+/ \pointsonpage{\thepage} points}}
+
+\usepackage[top=.5in, bottom=1in, left=1in, right=1in]{geometry}
+\usepackage{graphicx}
+\usepackage{enumitem}
+\usepackage{multirow, multicol}
+\usepackage{subfig}
+\usepackage{amsmath,amsthm,amssymb}
+\usepackage{bm}
+
+\usepackage{listings}
+
+\footer{}{\thepage}{}
+
+\usepackage{tikz}
+\usetikzlibrary{patterns,decorations.pathreplacing,shapes,arrows,matrix,positioning, shapes.geometric}
+
+\tikzstyle{block} = [rectangle, draw, fill=blue!15, text width=6em, text centered, rounded corners, minimum height=4em]
+\tikzstyle{line} = [draw, -latex']
+
+\tikzset{main node/.style={circle,draw,thick,minimum size=.75cm,inner sep=0pt},
+}
+
+\tikzset{square node/.style={rectangle,draw,thick,minimum size=.75cm,inner sep=0pt},
+}
+
+\newcommand{\erad}[2]{ \hat{\mathcal{R}}_{#1}\left( #2 \right) }
+\newcommand{\rad}[2]{ \mathcal{R}_{#1}\left( #2 \right) }
+\newcommand{\pr}[1]{\mbox{Pr}\left[#1 \right]}
+\newcommand{\prd}[2]{\mbox{Pr}_{#2}\left[#1 \right]}
+\newcommand{\x}{\mathbf{x}}
+\newcommand{\X}{\mathbf{X}}
+\newcommand{\y}{\mathbf{y}}
+\newcommand{\be}{\mathbf{\beta}}
+\providecommand{\g}{\, | \,}
+\newcommand{\al}{\mathbf{\alpha}}
+
+
+\newcommand{\ind}[1]{\mathds{1}\left[ #1 \right] }
+\newcommand{\e}[2]{\mathbb{E}_{#1}\left[ #2 \right] }
+\newcommand{\eh}[2]{\hat{\mathbb{E}}_{#1}\left[ #2 \right] }
+\newcommand{\obj}[0]{\mathscr{L}}
+\newcommand{\bo}[1]{\mathcal{O} \left( #1 \right) }
+\newcommand{\ex}[1]{\mbox{exp}\left\{ #1\right\} }
+
+% matrix macro
+\newcommand{\mymat}[1]{
+\left[
+\begin{array}{rrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr}
+#1
+\end{array}
+\right]
+}
+
+\definecolor{dkgreen}{rgb}{0,0.6,0}
+\definecolor{gray}{rgb}{0.5,0.5,0.5}
+\definecolor{mauve}{rgb}{0.58,0,0.82}
+
+\lstset{frame=tb,
+  language=Python,
+  aboveskip=3mm,
+  belowskip=3mm,
+  showstringspaces=false,
+  columns=flexible,
+  basicstyle={\small\ttfamily},
+  numbers=none,
+  numberstyle=\tiny\color{gray},
+  keywordstyle=\color{black},
+  commentstyle=\color{dkgreen},
+  stringstyle=\color{mauve},
+  breaklines=true,
+  breakatwhitespace=true,
+  tabsize=3
+} 
+
+
+\newcommand{\Cpp}{C\nolinebreak\hspace{-.05em}\raisebox{.4ex}{\tiny\bf +}\nolinebreak\hspace{-.10em}\raisebox{.4ex}{\tiny\bf +}}
+\def\Cpp{{C\nolinebreak[4]\hspace{-.05em}\raisebox{.4ex}{\tiny\bf ++}}}
+
+
+\begin{document}
+
+\begin{minipage}[ht!]{.25\textwidth}
+CSCI 3022 
+
+Midterm Exam
+
+Fall 2020
+\vfill
+\end{minipage}
+\begin{minipage}[ht]{.75\textwidth}
+	\large
+	Write \textbf{clearly} and \textbf{in the box}:
+	\centering
+	\begin{tabular}{|l c|} 	\hline 
+	\rule{0pt}{1cm}
+	\textbf{Name: Willem Scott} & \hspace{9cm} \\ \hline
+	\rule{0pt}{1cm}
+	\textbf{Student ID: 108759616} & \hspace{9cm} \\ \hline
+	\rule{0pt}{1cm} \textbf{Section number: 001} & \hspace{9cm} \\ \hline
+	\end{tabular}
+	%\end{table}
+	% \end{adjustwidth}
+	%\end{figure}
+\end{minipage}%
+
+\vspace{1cm}
+
+{\bf Read the following:}
+\vspace{1pc}
+
+\begin{itemize}                        %%%(change info. as desired)
+	\item {\bf RIGHT NOW}! Write your name, student ID and section number on the top of your exam. If you're handwriting your exam, include this information at the top of the first page!
+	\item You may use the textbook, your notes, lecture materials, and Piazza as recourses.  Piazza posts should not be about exact exam questions, but you may ask for technical clarifications and ask for help on review/past exam questions that might help you.  You may not use external sources from the internet or collaborate with your peers.
+	\item You may use a calculator.
+	\item If you print a copy of the exam, clearly mark answers to multiple choice questions in the provided answer box. If you type or hand-write your exam answers, write each problem on their own line, clearly indicating both the problem number and answer letter.
+	\item Mark only one answer for multiple choice questions.  If you think two answers are correct, mark the answer that {\bf best} answers the question.  No justification is required for multiple choice questions.  For handwriting multiple choice answers, clearly mark both the number of the problem and your answer for each and every problem.
+	\item For free response questions you must clearly justify all conclusions to receive full credit.  A correct answer with no supporting work will receive no credit.
+	\item The Exam is due to Gradescope by midnight on Monday, October 26.
+	\item When submitting your exam to Gradescope, use their submission tool to mark on which pages you answered specific questions.  Submitting your exam properly is worth 1/100 points.  The other problems sum to 99.
+\end{itemize}
+\clearpage
+% \vspace{1cm}
+
+% \begin{center}
+% \gradetable[v][pages]
+% \end{center}
+
+{\renewcommand{\arraystretch}{1.5}
+
+\vspace{8mm}
+
+% \begin{center}
+% \gradetable[v][pages]
+% \end{center}
+
+
+\label{---Problems---}
+
+
+\vspace{3cm}
+
+% =========================================================================================================
+% MCQs
+% =========================================================================================================
+{\begin{center} {\bf Multiple choice problems:} Write your answers in the boxes if using a printed version of the exam. \end{center}}\vspace{2mm}
+
+%1-2 Sample Stats
+\begin{questions}
+\question[3]  Under what standard conditions for \textit{unimodal} data is the median value $\tilde{x}$ larger than the mean value $\bar{x}$?
+
+\vspace{2mm}
+\begin{minipage}[b]{.85\textwidth}
+	\begin{enumerate}[label=\Alph*.]
+		\item This always happens.
+		\item This happens when the data is right-skew.
+		\item This happens when the data is left-skew.
+		\item This happens when the interquartile range is small.
+		\item This can not happen.
+	\end{enumerate}
+\end{minipage}
+\begin{minipage}[b]{.1\textwidth}
+	\vspace{\fill}\framebox(40,40){A \if\solutions1 \fi}
+\end{minipage}
+
+\question[3]  Consider the data set:  $[ 0,1,4,4,6, 8, 9, 11,12,15,x]$, where $x \in \mathbb{R}$ is an unknown quantity. What is the (minimal) set of possible values to which the lower quartile of this data set \textbf{must} belong?  Use Tukey's method, \textit{including} the median in each half of the data.
+\vspace{2mm}
+
+\begin{minipage}[b]{.85\textwidth}
+	\begin{enumerate}[label=\Alph*.]
+		\item $(-\infty, \infty)$
+		\item $[1,4]$
+		\item $[2.5,4]$
+		\item $\{4\}$
+		\item $[4,5]$
+		\item $[4,7]$
+		\item $\emptyset$
+	\end{enumerate}
+\end{minipage}
+\begin{minipage}[b]{.1\textwidth}
+	\vspace{\fill}\framebox(40,40){D \if\solutions1 \fi}
+\end{minipage}
+%
+\question[3]  Suppose Zach has a list consisting of all the first generation Pok\'emon. He is conducting a study of how many of them are actually stronger than Mudkip - the cutest Pok\'emon ever - by drawing a sample from his Pok\'edex, which he has sorted alphabetically.
+
+He checks the stats of every 7th Pok\'emon on his list and compares them to Mudkip's.
+
+What type of sample did Zach collect?
+\vspace{2mm}
+
+\begin{minipage}[b]{.85\textwidth}
+	\begin{enumerate}[label=\Alph*.]
+		\item Simple random sample
+		\item Systematic sample
+		\item Census sample
+		\item Stratified sample
+		\item Free samples, all you can eat!
+	\end{enumerate}
+\end{minipage}
+\begin{minipage}[b]{.1\textwidth}
+	\vspace{\fill}\framebox(40,40){B \if\solutions1 \fi}
+\end{minipage}
+
+
+%4-6 Conditionals
+\clearpage
+\noindent Use the following information for Problems 4 -- 6, which may build off of each other.
+\medskip
+
+\noindent It's time for a game of ``Data Scientists Among Us," where two players compete. One player is the \textbf{``Data Scientist" (D)}, who treats their data with dignity and respect, and the other player is the \textbf{``Imposter" (I)}, a devilish rogue that breaks mathematics regularly.
+
+Suppose the Data Scientist performs valid calculations \textbf{(V)} 80\% of the time.  On the other hand, the Imposter only does so 60\% of the time.
+
+\vspace{1mm}
+
+
+\question[3] Half the time, \textit{both} players make valid calculations.  What is the exact probability that \textit{neither} player makes valid calculations?
+\vspace{2mm}
+
+\begin{minipage}[b]{.85\textwidth}
+	\begin{enumerate}[label=\Alph*.]
+		\begin{multicols}{2}
+				\item $0.1$
+				\item $0.2$
+				\item $.25$
+				\item $0.48$
+				\item $0.5$
+				\item $0.52$
+				\item $.75$
+				\item $0.8$
+				\item $0.9$
+		\end{multicols}
+	\end{enumerate}
+\end{minipage}
+\begin{minipage}[b]{.1\textwidth}
+	\vspace{\fill}\framebox(40,40){H \if\solutions1 \fi}
+\end{minipage}
+
+\question[3] The Imposter is sneaky and tries to mimic the Data Scientist.  \textit{Given} the Data Scientist is \textit{not} making valid calculations, the Imposter is equally likely to make valid or invalid calculations.  What is the probability that the Imposter is making valid calculations \textit{and} the Data Scientist is making invalid ones?
+\vspace{2mm}
+
+\begin{minipage}[b]{.85\textwidth}
+	\begin{enumerate}[label=\Alph*.]
+		\begin{multicols}{2}
+			\item $0.1$
+			\item $0.2$
+			\item $.25$
+			\item $0.48$
+			\item $0.5$
+			\item $0.52$
+			\item $.75$
+			\item $0.8$
+			\item $0.9$
+		\end{multicols}
+	\end{enumerate}
+\end{minipage}
+\begin{minipage}[b]{.1\textwidth}
+	\vspace{\fill}\framebox(40,40){A \if\solutions1 \fi}
+\end{minipage}
+
+\question[3] What is the probability that the Data Scientist is making valid calculations \textit{given} the Imposter is making invalid ones?
+\vspace{2mm}
+
+\begin{minipage}[b]{.85\textwidth}
+	\begin{enumerate}[label=\Alph*.]
+		\begin{multicols}{2}
+			\item $0.1$
+			\item $0.2$
+			\item $.25$
+			\item $0.48$
+			\item $0.5$
+			\item $0.52$
+			\item $.75$
+			\item $0.8$
+			\item $0.9$
+		\end{multicols}
+	\end{enumerate}
+\end{minipage}
+\begin{minipage}[b]{.1\textwidth}
+	\vspace{\fill}\framebox(40,40){\if\solutions1 \fi}
+\end{minipage}
+
+\clearpage
+%8-9 Distributions and their properties
+\question[3] Medical records show that, among patients suffering from a given disease, 75\% will die of it within 5 years.  Out of 10 people suffering from D, let $X$ be the random variable counting the number of people who survive more than 5 years.  What is an appropriate random variable for $X$?
+\vspace{2mm}
+
+\begin{minipage}[b]{.85\textwidth}
+	\begin{enumerate}[label=\Alph*.]
+		\item Binomial
+		\item Negative binomial
+		\item Uniform
+		\item Normal
+		\item Poisson
+		\item Exponential
+	\end{enumerate}
+\end{minipage}
+\begin{minipage}[b]{.1\textwidth}
+	\vspace{\fill}\framebox(40,40){D \if\solutions1 \fi}
+\end{minipage}
+
+\question[3] Suppose when you get to the cafeteria, you and your best friend have a competition for pizza slices. For each and every slice, you each type $\textsc{np.random.rand()}$ and the person who gets the higher number wins. A pizza with 16 slices is put before you.  What is the probability that you get exactly 9 slices?
+
+\vspace{2mm}
+\begin{minipage}[b]{.85\textwidth}
+	\begin{enumerate}[label=\Alph*.]
+		\item $ \displaystyle {16 \choose 2} (0.5)^2 (0.5)^16 $
+		\item $ \displaystyle {16 \choose 8} (0.5)^8 (0.5)^8 $
+		\item $ \displaystyle {16 \choose 9} (0.5)^7 (0.5)^9 $
+		\item $ \displaystyle 1 - \sum_{i=9}^{16} {16 \choose i}(0.5)^i(0.5)^{16-i} $
+		\item $ \displaystyle 1-\sum_{i=0}^8 {16 \choose i} (0.5)^{16-i} (0.5)^i $
+		\item $ \displaystyle 1- \sum_{i=9}^{16} {i \choose 16}(0.5)^i(0.5)^{16-i}$
+	\end{enumerate}
+\end{minipage}
+\begin{minipage}[b]{.1\textwidth}
+	\vspace{\fill}\framebox(40,40){C \if\solutions1 \fi}
+\end{minipage}
+
+%9-10 PDFs and CDFs
+\question[3] Suppose we know that the general antiderivative of a function $g(x)$ is $\int g(x) \, dx = (x-1)e^{x-2}+C$.  Then from $[1,2]$ the cumulative density function of a random variable with pdf $f(x)$, $$f(x)=\begin{cases}
+g(x) & 1<x \leq 2\\
+0 & else
+\end{cases}$$
+is given by:
+\vspace{2mm}
+
+\begin{minipage}[b]{.85\textwidth}
+	\begin{enumerate}[label=\Alph*.]
+		\item $F(x) = (x-1)e^{x-2}+C$
+		\item $F(x) = (x-2)e^{x-2}+C$
+		\item $F(x) = (x-1)e^{x-2}$
+		\item $F(x) = (x-2)e^{x-2}$
+		\item $F(x) = x e^{-\lambda x}$
+		\item None of the Above.
+	\end{enumerate}
+\end{minipage}
+\begin{minipage}[b]{.1\textwidth}
+	\vspace{\fill}\framebox(40,40){C \if\solutions1 D \fi}
+\end{minipage}
+\vspace{3mm}
+
+\clearpage
+%11-12 Expectation and Variance
+\question[3] Suppose we have a random variable $X$ satisfying $E[X^2]=a$ and $Var[X^2]=b$.  What is $E[X^4]$?
+\begin{minipage}[b]{.85\textwidth}
+	\begin{enumerate}[label=\Alph*.]
+		\item 0
+		\item $a^2$
+		\item $b^2$
+		\item $b+a^2$
+		\item $\sqrt{b}$
+		\item $b^2-a^2$
+		\item $a^2+b^2$
+	\end{enumerate}
+\end{minipage}
+\begin{minipage}[b]{.1\textwidth}
+	\vspace{\fill}\framebox(40,40){D \if\solutions1 B \fi}
+\end{minipage}
+
+%11-12 Expectation and Variance
+\question[3] The average high temperature for Boulder, CO on October 31 is $58^\circ$ Fahrenheit with a standard deviation of 11 degrees.  If the temperature $C$ in Celsius is calculated from the temperature in Fahrenheit $F$ by  $C=\frac{5}{9}(F-32),$ what is the \textit{variance} of the temperature in Boulder on October 31 in degrees Celsius?
+
+\begin{minipage}[b]{.85\textwidth}
+	\begin{enumerate}[label=\Alph*.]
+		\item $\frac{5}{9}\cdot (58-32)$
+		\item $11^2 \cdot \frac{5^2}{9^2}$
+		\item $11\cdot \frac{5}{9}$
+		\item $\left( \frac{5}{9}\right)^2 26^2$
+		\item $11^2 \cdot \frac{5}{9}$
+		\item $11\cdot \left( \frac{5}{9}\right) ^2$
+	\end{enumerate}
+\end{minipage}
+\begin{minipage}[b]{.1\textwidth}
+	\vspace{\fill}\framebox(40,40){B \if\solutions1 B \fi}
+\end{minipage}
+
+\question[3] Consider the following function, where the probability $p$ is some constant.  What is the \textit{average} return value for this function?
+\begin{lstlisting}
+def what_the_function(p):
+x = 0
+y = 0
+while y < 5:
+draw = np.random.choice([0,1], p=[1-p, p])
+y += 1
+if draw == 1:
+x += 1
+return x
+\end{lstlisting}
+
+\begin{minipage}[b]{.85\textwidth}
+	\begin{enumerate}[label=\Alph*.]
+		\item $p$
+		\item $5p$
+		\item $1/p$
+		\item $5/p$
+		\item $\frac{5p}{1-p}$
+		\item $p^2$
+	\end{enumerate}
+\end{minipage}
+\begin{minipage}[b]{.1\textwidth}
+	\vspace{\fill}\framebox(40,40){B \if\solutions1 \fi}
+\end{minipage}
+\clearpage
+
+%13 Transformed RV
+
+\question[3] You are sampling the weights of various puppies from a population with a known mean of $15$ pounds and variance of $16$ pounds$^2$. You obtain a measurement from an adorable Beagle of $X = 19$ pounds. What is the corresponding value of the standardized normal random variable, $Z$?
+
+\begin{minipage}[b]{.85\textwidth}
+	\begin{enumerate}[label=\Alph*.]
+		\item $0.25$
+		\item $0.5$
+		\item $1$
+		\item $\frac{19}{16}$
+		\item $2$
+		\item $\frac{19}{4}$
+		\item $15$
+	\end{enumerate}
+\end{minipage}
+\begin{minipage}[b]{.1\textwidth}
+	\vspace{\fill}\framebox(40,40){C \if\solutions1 \fi}
+\end{minipage}
+
+% =========================================================================================================
+% Free Responses and Short Answers
+% =========================================================================================================
+{\begin{center} {\bf Free Response problems:} Write your answers in the spaces following each prompt if possible.\\  Make note if your work continues elsewhere!\end{center}}\vspace{2mm}
+
+%%FR 1: (Visualization) Doing Normal instead, since takehome
+\question[10] You are in awe of your desk plant Fernoulli Jr.'s grandeur.  It's growing so successfully that you're considering renaming it Fernomial!  It's now time for \textit{quantifying} Fernoulli Jr.'s majesty.  Suppose your plant has 324 leaves which each have length independently and identically distributed from the normal distribution with mean $5$ cm and variance $1.5$ cm.
+	\begin{enumerate}[label=(\alph*)]
+		\item (5 points) You admire a branch that contains 10 leaves.  What is the exact distribution of the \textit{average} leaf length of the 10 leaves along that branch?  Cite any relevant theorems.
+
+		\item (5 points) In your research, a botanist tells you that the distribution of colors of leaves (via spectral analysis) is \textit{also} independently distributed, and that you should expect a mean wavelength of $515$nm with standard deviation of $10nm$.  The exact distribution is unknown, however.  What conclusions can you draw about the Fernoulli's \textit{average} spectral leaf color?  Cite any relevant theorems.
+	\end{enumerate}
+\clearpage
+
+%%FR2: Conditioning Pen and Paper
+\question[15] You are an analyst charged with the task of gauging support for a new ballot measure. You find that the probability of a Democrat supporting this ballot measure is 0.2, the probability of a Republican supporting this ballot measure is 0.8, and the probability of an Independent supporting the measure is 0.4. Furthermore, you know that in your area, 60\% of voters are registered Democrats, 30\% are registered Republicans, and 10\% are registered Independents.
+	\begin{enumerate}[label=(\alph*)]
+		\item (5 points) You interview a voter at random. What is the probability that they support this ballot measure (S)? \newline
+
+		$P(S) = P(D)P(S | D) + P(R)P(S | R) + P(I)P(S | I)$ \newline
+		$P(S) = 0.6 \cdot 0.2 + 0.3 \cdot 0.8 + 0.1 \cdot 0.4$ \newline
+		$P(S) = 0.4$ \newline
+
+		\item (5 points) You interview someone at random and find out that they support this ballot measure. Given this information, what is the probability that they are a Republican? \newline
+
+		$P(R | S) = \dfrac{P(S | R)P(R)}{P(S)}$ \newline
+		$P(R | S) = \dfrac{0.8 \cdot 0.3}{0.4} = 0.6$ \newline
+
+		\item (5 points) Are the events ``voter is a Republican" and ``voter supports this ballot measure" independent? Justify your answer using math. \newline
+		$P(R | S) = 0.6$ \newline
+		$P(R) = 0.3$ \newline
+		$P(R) \neq P(R | S)$ \newline
+		The two are not independent, since adding the condition of supporting the measure changes the chance of being republican.
+
+	\end{enumerate}
+
+\vspace{6cm}
+\question[15] You've discovered that games which involve rolling dice are often pretty boring, and you could spice them up a bit with a die that is weighted.  Suppose we have a six-sided die that satisfies the following claim:
+``The probability of rolling each number is proportionate to the \textit{square} of the face."  In other words, a 2 is 4 times more likely than a 1, a 3 is 9 times more likely than a 1, and so forth.
+\begin{enumerate}[label=(\alph*)]
+	\item (7 points) What is the probability mass function for the face of the die? \newline
+
+	$$91 = 1^2 + 2^2 + 3^2 + 4^2 + 5^2 + 6^2$$
+
+	$$f(x)=\begin{cases}
+    \dfrac{n^2}{91} & \text{for } x \in \{1,2,3,4,5,6\}\\
+    0 & \text{else}
+    \end{cases}$$
+
+	\item (4 points) You roll the die twice and sum the faces.  What is the probability you have rolled a 3 or less?
+	There are three options, a 1 and 1 are rolled, a 1 and 2 are rolled, or a 2 and 1 are rolled. \newline
+
+	$$P(S \leq 3) = P(1)^2 + 2 \cdot P(1)P(2)$$
+	$$P(S \leq 3) = \dfrac{1}{91^2} + 2 \cdot \dfrac{4}{91^2} = \dfrac{9}{91^2}$$ \newline
+
+	\item (4 points) You decide to roll the die until you observe two consecutive 1's.  What is the probability that it takes you exactly 4 rolls for this to happen (so the third and fourth rolls were each ``1"). \newline
+
+	The first roll can be anything, the second roll can be anything but 1, and the last two rolls must both be 1. \newline
+	$$P(E) = 1 \cdot (1 - \dfrac{1}{91}) \cdot \dfrac{1}{91^2} = \dfrac{90}{91^3}$$
+
+\end{enumerate}
+\clearpage
+
+\question[20]
+Mathematically justify all answers.  Suppose you have a probability distribution of the form
+$$f(x)=\begin{cases}
+a+bx & \text{for } x \in [0,2]\\
+0 & \text{else}
+\end{cases}$$
+where $a$ and $b$ are some unknown constants (real numbers).
+
+
+\begin{enumerate}[label=(\alph*)]
+	\item (4 points) Leaving $a$ and $b$ constant, integrate the pdf over the entire range of $X$.
+	$$\int^2_0 a+bx \: dx = \left[ax + \dfrac{bx^2}{2}\right]^2_0 = 2a + 2b$$
+	\item (4 points) Compute the expected value of $X$ as a function of $a$ and $b$.
+	$$E[X] = \dfrac{2a + 2b}{2 - 0} = a + b$$
+	\item (4 points) Suppose you are only now told that $E[X]= \frac{10}{9}$.  Use this and the information in parts (a) and (b) to to solve for the constants $a$ and $b$.
+	$$\frac{10}{9} = a + b$$
+	\item (4 points) Compute the median of $X$.
+	$$a + b$$
+	\item (4 points) Compute $\textrm{Var}(X)$.
+	$$b^2$$
+\end{enumerate}
+
+
+
+
+
+\end{questions}
+
+\end{document}
+
+
+
